@@ -27,7 +27,7 @@ class YelpApiAdapter
     }
     response = HTTP.auth("Bearer #{API_KEY}").get(url, params: params)
     thing = response.parse["businesses"]
-    binding.pry
+    # binding.pry
   end
 end
 #   def self.search_all
