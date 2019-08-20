@@ -9,3 +9,4 @@ gem "faker"
 gem "activerecord", "~> 5.2.3"
 gem "yelp"
 gem "http"
+gem 'dotenv'

@@ -19,6 +19,7 @@ GEM
     concurrent-ruby (1.1.5)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
+    dotenv (2.7.5)
     faker (2.1.2)
       i18n (>= 0.8)
     faraday (0.15.4)
@@ -75,6 +76,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (~> 5.2.3)
+  dotenv
   faker
   http
   pry

@@ -2,11 +2,11 @@ require "json"
 require "http"
 # require 'rest-client'
 require 'pry'
-
+require_relative 'hidden'
 API_HOST = "https://api.yelp.com"
 SEARCH_PATH = "/v3/businesses/search"
 BUSINESS_PATH = "/v3/businesses/"  # trailing / because we append the business id to the path
-API_KEY = "WY8ibitP0T4k63wHr40eiFW-wnHEOnny2Dev3wt-d3Ws92yl95IQI1KQvRLwoRZZvyzcwEi68utjuCGNtT82EhXwMe6EP44WmM0WeazoHfAB_NM9KJ7amHQH6eHCXHYx"
+API_KEY = APIKEY
 DEFAULT_BUSINESS_ID = "yelp-san-francisco"
 DEFAULT_TERM = "dinner"
 DEFAULT_LOCATION = "New York, NY"
@@ -29,7 +29,7 @@ class YelpApiAdapter
     thing = response.parse["businesses"]
     binding.pry
   end
-
+end
 #   def self.search_all
 #     url = "#{API_HOST}#{SEARCH_PATH}"
 #     response = HTTP.auth("Bearer #{API_KEY}").get(url, params: params)
