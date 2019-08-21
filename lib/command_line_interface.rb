@@ -9,13 +9,17 @@ class Cli
   end
   
   def self.welcome
-    puts 'Welcome. Please enter a number.'
+    system("clear")
+    puts "Welcome"
+    puts
+    puts 'Please enter a number.'.colorize(:green)
     self.login_or_create_account 
   end
 
   def self.login_or_create_account
-    puts "1. Login"
-    puts "2. Create a new account"
+    
+    puts "1. Login".colorize(:cyan)
+    puts "2. Create a new account".colorize(:cyan)
     response = gets.chomp
     if response == "1"
       login
@@ -28,6 +32,7 @@ class Cli
   end
 
   def self.login
+    system("clear")
     puts "Please enter your username."
     username = gets.chomp.downcase
     @@current_user = User.find_by(username: username)
@@ -35,16 +40,20 @@ class Cli
       system("clear")
       puts "Welcome, #{current_user.username}!".colorize(:green)
       puts
-      sleep(1)
+      sleep(1.15)
       self.menu
     else
-      puts "This user do not exist.".colorize(:red)
+      system("clear")
+      puts "This user does not exist.".colorize(:red)
+      puts
       puts "Please enter the number to login again or to create a new account.".colorize(:green)
+      puts
       self.login_or_create_account
     end
   end
 
   def self.new_user
+    system("clear")
     puts "Please enter new username:"
     n = gets.chomp.downcase
     User.create(
@@ -62,6 +71,7 @@ class Cli
   end
 
   def self.menu
+    system("clear")
     puts "1. Find a new restaurant"
     puts "2. View previous orders"
     puts "3. View my favorite restaurants"
@@ -76,8 +86,6 @@ class Cli
       self.find_new_restaurant_options
     when "2" || "previous"
       self.previous_orders
-
-      #reorder from and commonly ordered from
     when "3" || "favorites"
       self.get_user_favorites
     when "4" || "roulette"
@@ -94,7 +102,9 @@ class Cli
   end
 
   def self.find_new_restaurant_options
-    puts "Please enter 1 or 2 for how you want to choose your restaurant." 
+    system("clear")
+    puts "Please enter 1 or 2 for how you want to choose your restaurant.".colorize(:green)
+    puts
     puts "1. Pick based on price"
     puts "2. Pick based on category"
     response = gets.chomp
@@ -104,6 +114,7 @@ class Cli
     when "2"
       self.choose_by_category
     else 
+      system("clear")
       puts "INVALID INPUT. Please enter 1 or 2."
       sleep(1)
       self.find_new_restaurant_options
@@ -112,7 +123,10 @@ class Cli
 
 
   def self.choose_by_price
-    puts "Please enter a number between 1 and 4 for desired price range."
+    system("clear")
+
+    puts "Please enter a number between 1 and 4 for desired price range.".colorize(:green)
+    puts
     puts "1. $"
     puts "2. $$"
     puts "3. $$$"
@@ -153,6 +167,7 @@ class Cli
 
 
   def self.choose_by_category
+    system("clear")
     puts "Please enter a desire category."
     response = gets.chomp
     five_restaurants = Restaurant.all.select { |r| r.category.downcase.include?(response) }
@@ -161,7 +176,7 @@ class Cli
     if !five_restaurants.empty?
       self.pick_from_five(five_restaurants)
     else
-      puts "This category does not exist. Please enter a new category."
+      puts "This category does not exist. Please enter a new category.".colorize(:light_magenta)
       puts "Here are some popular categories:"
       puts "    American"
       puts "    Thai"
@@ -173,17 +188,20 @@ class Cli
   end
 
   def self.roulette
+    system("clear")
     chosen = Restaurant.all.shuffle.first
     puts chosen.name
     puts chosen.price
     puts chosen.rating
-    puts "If you like this choice type 'order' otherwise type 'try again'."
+    puts "If you like this choice type 'order' otherwise type 'try again'.".colorize(:color => :light_blue, :background => :red)
     response = gets.chomp.downcase
 
     case response
     when 'order'
       new_order = self.place_order(chosen) 
+      puts
       puts "Order placed at #{new_order.restaurant.name}!"
+      puts
     when 'try again'
       self.roulette
     else
@@ -194,6 +212,7 @@ class Cli
   end
 
   def self.previous_orders
+    system("clear")
     orders = Order.all.select{ |o| o.user_id == current_user.id }
     uniq_orders = orders.uniq { |order| order.restaurant.name }
     uniq_orders.each_with_index { |order, idx| puts "#{idx+1}. #{order.restaurant.name}"}
@@ -215,6 +234,7 @@ class Cli
   end
 
   def self.update_user
+    system("clear")
     puts "What would you like to do?" 
     puts "1. Change username"
     puts "2. Delete your account"
@@ -222,7 +242,7 @@ class Cli
     sleep(1)
     case response
     when "1"
-      puts "Please enter your new username:"
+      puts "Please enter your new username:".colorize(:blink)
       updated = gets.chomp.downcase
       current_user.update(username: updated)
       puts "Your username has been changed to #{current_user.username}"
@@ -235,10 +255,11 @@ class Cli
   end
   
   def self.get_user_favorites
+    system("clear")
     orders = Order.all.select{ |o| o.user_id == current_user.id && o.favorite}
     uniq_orders = orders.uniq { |order| order.restaurant.name }
     uniq_orders.each_with_index { |order, idx| puts "#{idx+1}. #{order.restaurant.name}"}
-    puts "Please enter a number for desired action"
+    puts "Please enter a number for desired action".colorize(:swap)
     puts "1. Reorder from one of these restaurants"
     puts "2. Return to main menu"
     response = gets.chomp
@@ -256,6 +277,7 @@ class Cli
   end
 
   def self.reorder(order)
+    system("clear")
     new_order = Order.create(
     user_id: current_user.id,
     restaurant_id: order.restaurant.id
@@ -274,6 +296,7 @@ class Cli
   end
 
   def self.add_rating(order)
+
     puts "Please enter a rating between 1 and 5 for this order."
     response = gets.chomp
     if response.to_i >= 0 && response.to_i <= 5 
@@ -283,6 +306,7 @@ class Cli
   end
 
   def self.add_to_favorites(order)
+    system("clear")
     puts "Would you like to add this to your favorites?"
     puts "1. yes"
     puts "2. no"
@@ -299,6 +323,8 @@ class Cli
   def self.exit
     puts "Good-bye"
     sleep(1)
+    system("clear")
+
   end
 
 end #CLI class end
