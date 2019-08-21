@@ -72,15 +72,17 @@ class Cli
     puts "Please enter a number between 1 and 5 for your desired action."
     response = gets.chomp
     case response
-    when "1"
+    when "1" || "new"
       self.find_new_restaurant_options
-    when "2"
+    when "2" || "previous"
       self.previous_orders
-    when "3"
+
+      #reorder from and commonly ordered from
+    when "3" || "favorites"
       self.get_user_favorites
-    when "4"
+    when "4" || "roulette"
       self.roulette
-    when "5"
+    when "5" || "user settings"
       self.update_user
     when "6"
       self.exit
@@ -107,6 +109,7 @@ class Cli
       self.find_new_restaurant_options
     end
   end
+
 
   def self.choose_by_price
     puts "Please enter a number between 1 and 4 for desired price range."
@@ -186,6 +189,7 @@ class Cli
     else
       puts "INVALID INPUT. Please only type 'order' or 'try again'."
       self.roulette
+
     end
   end
 
