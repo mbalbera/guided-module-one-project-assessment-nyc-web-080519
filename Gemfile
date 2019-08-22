@@ -12,3 +12,4 @@ gem "http"
 gem 'dotenv'
 gem 'colorize'
 gem 'text-table'
+gem 'rspec'

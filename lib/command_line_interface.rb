@@ -44,6 +44,7 @@ class Cli
     puts
     puts "1. Log in".colorize(:cyan)
     puts "2. Create a new account".colorize(:cyan)
+    puts
     response = gets.chomp
     if response == "1"
       self.login
@@ -51,8 +52,10 @@ class Cli
       puts `clear`
       self.new_user
     else
-      puts
-      puts "INVALID INPUT. Please enter either 1 or 2".colorize(:red)
+      # puts
+      # system "say 'oops'"
+      # puts "Invalid response. Please enter either 1 or 2".colorize(:red)
+      self.invalid_response_one_two
       self.login_or_create_account
     end
   end
@@ -89,7 +92,7 @@ class Cli
     puts
     n = gets.chomp.downcase
     if User.find_by(username: n)
-      puts "Sorry, #{n} is already taken. Please enter a different username."
+      puts "Sorry, #{n} is already taken. Please enter a different username.".colorize(:red)
       sleep(0.5)
       self.new_user
     else
@@ -118,16 +121,22 @@ class Cli
     puts "Main Menu".colorize(:magenta)
     puts "~~~~~~~~~~~~~~~~~~~~~~~~~".colorize(:magenta)
     sleep(0.1)
+    # system "say 'bloop'"
     puts "1. Find a new restaurant to order from"
     sleep(0.1)
+    # system "say 'bloop'"
     puts "2. View your previous orders"
     sleep(0.1)
+    # system "say 'bloop'"
     puts "3. View your favorite restaurants"
     sleep(0.1)
+    # system "say 'bloop'"
     puts "4. Pick a totally random restaurant"
     sleep(0.1)
+    # system "say 'bloop'"
     puts "5. Change your user settings"
     sleep(0.1)
+    # system "say 'bloop'"
     puts "6. Exit program"
     puts 
     sleep(0.2)
@@ -162,7 +171,10 @@ class Cli
       sleep(0.25)
       self.exit
     else 
-      puts "INVALID INPUT. Please enter a number 1-6.".colorize(:red)
+      puts
+      system "say 'oops'"
+      puts "Invalid response. Please enter a number 1-6.".colorize(:red)
+      puts
       sleep(1)
       self.menu
     end
@@ -184,7 +196,8 @@ class Cli
       self.choose_by_category
     else 
       puts `clear`
-      puts "INVALID INPUT. Please enter 1 or 2.".colorize(:red)
+      self.invalid_response_one_two
+      # puts "Invalid response. Please enter 1 or 2.".colorize(:red)
       sleep(1)
       self.find_new_restaurant_options
     end
@@ -192,7 +205,7 @@ class Cli
 
 
   def self.choose_by_price
-    puts `clear`
+    # puts `clear`
 
     puts "Please enter a number between 1 and 4 for desired price range.".colorize(:green)
     puts
@@ -213,8 +226,11 @@ class Cli
     when "4"
       dollars = "$$$$"
     else
-      puts "INVALID INPUT. Please enter a number 1-4.".colorize(:red)
-      sleep(1)
+      puts
+      system "say 'oops'"
+      puts "Invalid response. Please enter a number 1-4.".colorize(:red)
+      puts
+      sleep(0.5)
       self.choose_by_price
     end
 
@@ -223,7 +239,7 @@ class Cli
   end
 
   def self.pick_from_five(five_restaurants)
-    puts `clear`
+    #puts `clear`
     puts "Here are some restaurants that match that search:".colorize(:magenta)
     puts
     
@@ -236,14 +252,28 @@ class Cli
     puts table.to_table(:first_row_is_head => true)
 
     puts
-    puts "Please enter the number of the restaurant you'd like to order from:".colorize(:green)
+    puts "Please enter the number of the restaurant you'd like to order from, or type 'menu' to return to the main menu:".colorize(:green)
     puts
-    response = gets.chomp.to_i - 1
+    response = gets.chomp 
+    if response == 'menu'
+      puts
+      puts "Returning to main menu..."
+      puts
+      sleep(1.5)
+      puts `clear`
+      self.menu
+    end
+    
+    response = response.to_i - 1
+
     if response >= 0 && response < five_restaurants.length
       restaurant = five_restaurants[response]
       self.place_order(restaurant)
     else
-      puts "INVALID INPUT. Please enter a number between 1 and #{five_restaurants.length}".colorize(:red)
+      puts
+      system "say 'oops'"
+      puts "Invalid response. Please enter a number between 1 and #{five_restaurants.length} or type 'menu'".colorize(:red)
+      sleep(1)
       self.pick_from_five(five_restaurants)
     end
   end
@@ -302,7 +332,10 @@ class Cli
     when 'try again'
       self.roulette
     else
-      puts "INVALID INPUT. Please only type 'order' or 'try again'.".colorize(:red)
+      puts
+      system "say 'oops'"
+      puts "Invalid response. Please only type 'order' or 'try again'.".colorize(:red)
+      sleep(1)
       self.roulette
     end
   end
@@ -336,7 +369,9 @@ class Cli
         system("clear")
         self.menu
       else 
-        puts "INVALID INPUT. Please enter either 1 or 2.".colorize(:red)
+        puts
+        # puts "Invalid response. Please enter either 1 or 2.".colorize(:red)
+        self.invalid_response_one_two
         self.previous_orders
       end
     end #end of first if statement
@@ -358,19 +393,26 @@ class Cli
       puts "Please enter your new username:".colorize(:green)
       puts
       updated = gets.chomp.downcase
-      current_user.update(username: updated)
-      puts "Your username has been changed to #{current_user.username}".colorize(:magenta)
-      sleep(0.25)
-      puts "Returning to main menu..."
-      sleep(1.5)
-      system("clear")
-      self.menu
+      if User.find_by(username: updated)
+        puts "Sorry, #{updated} is already taken. Please try again."
+        sleep(1.5)
+        self.update_user
+      else
+        current_user.update(username: updated)
+        puts "Your username has been changed to #{current_user.username}".colorize(:magenta)
+        sleep(0.25)
+        puts "Returning to main menu..."
+        sleep(1.5)
+        system("clear")
+        self.menu
+      end
     when "2"
-      User.delete(current_user)
+      puts
       puts "Are you sure you want to delete your account? Enter 'yes' to delete or 'no' to return to the main menu.".colorize(:red)
       double_check = gets.chomp.downcase
 
       if double_check == 'yes'
+        User.delete(current_user)
         puts "Your username has been deleted.".colorize(:magenta) 
         sleep(1)
         self.exit
@@ -390,7 +432,7 @@ class Cli
   end
   
   def self.get_user_favorites
-    puts `clear`
+    # puts `clear`
     orders = Order.all.select{ |o| o.user_id == current_user.id && o.favorite}
     uniq_orders = orders.uniq { |order| order.restaurant.name }
     sleep(1)
@@ -406,7 +448,7 @@ class Cli
       puts
       uniq_orders.each_with_index { |order, idx| puts "#{idx+1}. #{order.restaurant.name}"}
       puts 
-      puts "What would you like to do next? (Enter 1 or 2)".colorize(:green)
+      puts "What would you like to do next? (Enter 1, 2, or 3)".colorize(:green)
       puts "1. Reorder from one of these restaurants"
       puts "2. Remove a restaurant from your list of favorites"
       puts "3. Return to main menu"
@@ -434,7 +476,10 @@ class Cli
         system("clear")
         self.menu
       else 
-        puts "INVALID INPUT. Please enter either 1 or 2.".colorize(:red)
+        puts
+        puts "Invalid response. Please enter either 1, 2 or 3.".colorize(:red)
+        puts
+        sleep(0.25)
         self.get_user_favorites
       end
     end
@@ -474,8 +519,13 @@ class Cli
     puts "Please enter a rating between 1 and 5 for this order.".colorize(:green)
     puts
     response = gets.chomp
-    if response.to_i >= 0 && response.to_i <= 5 
+    if response.to_i > 0 && response.to_i <= 5 
       order.update(rating: response.to_i)
+    else
+      system "say 'oops'"
+      puts "Invalid response. Please enter a rating between 1 and 5.".colorize(:red)
+      puts
+      self.add_rating(order)
     end
     puts
     self.add_to_favorites(order)
@@ -484,8 +534,8 @@ class Cli
   def self.add_to_favorites(order)
     #binding.pry
     puts "Would you like to add this to your favorites?".colorize(:green)
-    puts "1. Yes"
-    puts "2. No"
+    puts "1. Yes!!!!!!!"
+    puts "2. Nah"
     response = gets.chomp
     case response
     when "1"
@@ -497,16 +547,24 @@ class Cli
       puts "Returning to the main menu..."
       sleep(2.0)    
     when "2"
-      puts "Sorry that #{order.restaurant.name} wasn't one of your favorites".colorize(:magenta)
+      puts "\nSorry that #{order.restaurant.name} wasn't one of your favorites".colorize(:magenta)
       puts
       puts "Returning to the main menu..."
       sleep(2.0)
     else
-      puts "Invalid response. Please enter 1 or 2."
+      self.invalid_response_one_two
+      # puts "Invalid response. Please enter 1 or 2."
       self.add_to_favorites(order)
     end
     puts `clear`
     self.menu
+  end
+
+  def self.invalid_response_one_two
+    puts
+    system "say 'oops'"
+    puts "Invalid response. Please enter either 1 or 2".colorize(:red)
+    puts
   end
 
   def self.exit

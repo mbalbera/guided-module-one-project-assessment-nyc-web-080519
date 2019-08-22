@@ -31,8 +31,10 @@ module Ew
     SPICY
     10.times do
       puts spicy.colorize(:color => :green)
+      # system "say 'spicy'"
       sleep(0.2)
       puts spicy.colorize(:color => :red)
+      # system "say 'spicy'"
       sleep(0.2)
     end
     
