@@ -1,6 +1,9 @@
 require 'pry'
+require_relative "./egg.rb"
 
 class Cli
+
+  extend Ew
 
   @@current_user = nil
 
@@ -43,8 +46,9 @@ class Cli
     puts "2. Create a new account".colorize(:cyan)
     response = gets.chomp
     if response == "1"
-      login
+      self.login
     elsif response == "2"
+      puts `clear`
       self.new_user
     else
       puts
@@ -66,6 +70,10 @@ class Cli
       puts
       sleep(1.15)
       self.menu
+    elsif username == "evans"
+      Ew.spicy
+      sleep(1)
+      self.exit
     else
       puts `clear`
       puts "This user does not exist.".colorize(:red)
@@ -77,27 +85,32 @@ class Cli
   end
 
   def self.new_user
-    puts `clear`
     puts "Please enter a new username:".colorize(:green)
     puts
     n = gets.chomp.downcase
-    User.create(
-      username: n
-    )
-    @@current_user = User.find_by(username: n)
-    if current_user
-      puts `clear`
-      puts
-      puts "New user account has been created.".colorize(:magenta)
-      sleep(1)
-      puts `clear`
-      puts "Hello, #{current_user.username}!".colorize(:cyan)
-      puts 
-      self.menu 
+    if User.find_by(username: n)
+      puts "Sorry, #{n} is already taken. Please enter a different username."
+      sleep(0.5)
+      self.new_user
     else
-      puts "Unable to create a new user account. Please start again.".colorize(:red)
-      puts
-      self.login_or_create_account
+      User.create(
+        username: n
+      )
+      @@current_user = User.find_by(username: n)
+      if current_user
+        puts `clear`
+        puts
+        puts "New user account has been created.".colorize(:magenta)
+        sleep(1)
+        puts `clear`
+        puts "Hello, #{current_user.username}!".colorize(:cyan)
+        puts 
+        self.menu 
+      else
+        puts "Unable to create a new user account. Please start again.".colorize(:red)
+        puts
+        self.login_or_create_account
+      end
     end
   end
 
@@ -237,7 +250,6 @@ class Cli
 
 
   def self.choose_by_category
-    #puts `clear`
     puts "What type of food are you hungry for? Type something like 'pizza'".colorize(:green)
     puts
     response = gets.chomp.downcase
@@ -257,11 +269,11 @@ class Cli
       puts "    Seafood"
       puts "    Bakeries"
       puts
-      #puts `clear`
       self.choose_by_category
     end
   end
 
+  #updated with table
   def self.roulette
     puts `clear`
     chosen = Restaurant.all.shuffle.first
@@ -295,10 +307,7 @@ class Cli
     end
   end
   
-
-  #updated this to cover if someone doesn't have any orders
   def self.previous_orders
-    #puts `clear`
     orders = Order.all.select{ |o| o.user_id == current_user.id }
     uniq_orders = orders.uniq { |order| order.restaurant.name }
     sleep(1)
