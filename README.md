@@ -35,7 +35,9 @@ Additional command line styling provided by the [Colorize gem](https://github.co
 Try it out!
 ========================
 
-To play around with our project, fork and clone the repository, and then run the application through the run file `ruby bin/run.rb` 
+To play around with our project, you will need your own API key from Yelp Fusion. Fork and clone the repository, and use the [dotenv gem](https://github.com/bkeepers/dotenv) to help set up your .env file. Add .env to your `.gitignore` file. In the .env file, create a constant variable: APIKEY=\<your fusion api key>.
+
+Then run `bundle install` in the terminal, and run `rake db:migrate` followeed by `rake db: seed` to set up your schema and seed the database. Then run the application through the run file `ruby bin/run.rb` 
 
 Follow the prompts on the screen, and let us know if anything breaks!
 
