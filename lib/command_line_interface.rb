@@ -257,13 +257,13 @@ class Cli
   def self.choose_by_category
     puts "What type of food are you hungry for? Type something like 'pizza'\n".colorize(:green)
     response = gets.chomp.downcase
-    five_restaurants = Restaurant.all.select { |r| r.category.downcase.include?(response) }
-    five_restaurants = five_restaurants.uniq.shuffle.take(5)
+    # five_restaurants = Restaurant.all.select { |r| r.category.downcase.include?(response) }
+    # five_restaurants = five_restaurants.uniq.shuffle.take(5)
+    five_restaurants = Restaurant.by_category(response)
 
     if !five_restaurants.empty?
       self.pick_from_five(five_restaurants)
     else
-      puts
       puts "\nSorry, this category does not exist. Let's try again.\n".colorize(:red)
       puts "Here are some popular categories:".colorize(:red)
       puts "    American"
