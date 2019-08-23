@@ -9,7 +9,9 @@ tmp
 *.iml
 *.log
 *.swp
-*.png
+
 
 db/*.db
 .env
+
+OLD_README.md

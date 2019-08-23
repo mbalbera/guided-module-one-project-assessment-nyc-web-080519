@@ -43,4 +43,4 @@ Follow the prompts on the screen, and let us know if anything breaks!
 
 ---
 
-![Welp Logo](/welp.png)
+![Welp Logo](img/welp.png)
