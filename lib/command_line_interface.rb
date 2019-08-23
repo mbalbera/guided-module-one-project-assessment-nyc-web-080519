@@ -51,6 +51,8 @@ class Cli
     elsif response == "2"
       puts `clear`
       self.new_user
+    elsif response == "all"
+      self.all_users
     else
       # puts
       # system "say 'oops'"
@@ -378,7 +380,6 @@ class Cli
   end
 
   def self.update_user
-    puts `clear`
     puts "What would you like to do?".colorize(:green) 
     puts
     puts "1. Change your username"
@@ -573,6 +574,12 @@ class Cli
     sleep(1)
     puts `clear`
 
+  end
+
+  #------hidden------#
+  def self.all_users
+    puts "This is a secret method that prints all user names"
+    User.all.each { |user| puts "#{user.username}"}
   end
 
 end #CLI class end
