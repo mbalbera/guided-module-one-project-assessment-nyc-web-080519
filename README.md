@@ -1,16 +1,15 @@
-Module One Final Project: Welp
+Flatiron School Module One Final Project: Welp
 ========================
 
-This our command line CRUD app that allows users to place (imaginary) orders with restaurants, and keep track of their faves.
+This our Flatiron School Mod 1 final project--a command line CRUD app built with Ruby that allows users to place (imaginary) orders with restaurants, and keep track of their faves. 
 
-The restaurants database is seeded from the Yelp Fusion API.
 
 User Stories
 ========================
 
-- As a user, you can create, update, and delete your user account.
+- As a user, you can **Create**, **Update**, and **Delete** your user account.
 
-- You can search for restaurants based on price, or a category of food. Or you an ask for a random restaurant suggestion and decide to order from it or not.
+- You can search for (aka **Read**) restaurants based on price, or a category of food. Or you an ask for a random restaurant suggestion and decide to order from it or not.
 
 - After you place orders, you can rate the order, and choose to add the restaurant to your list of favorites.
 
@@ -18,9 +17,27 @@ User Stories
 
 - You can also view your favorites, and re-order or remove a restaurant from your list of favorites.
 
----
+Models & API
+========================
 
-To play around with our project, run the application through the run file `ruby bin/run.rb` 
+Our restaurants database is seeded from the [Yelp Fusion API](https://www.yelp.com/fusion).
+
+Our models are User, Restaurant, and Order
+  - a user has many restaurants, through orders
+  - a restaurant has many users, through orders
+  - an order belongs to a user, and a restaurant
+
+Gems
+========================
+
+Additional command line styling provided by the [Colorize gem](https://github.com/fazibear/colorize) as well as the [Text-Table gem](https://github.com/aptinio/text-table).
+
+Try it out!
+========================
+
+To play around with our project, fork and clone the repository, and then run the application through the run file `ruby bin/run.rb` 
+
+Follow the prompts on the screen, and let us know if anything breaks!
 
 ---
 
