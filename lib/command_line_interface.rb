@@ -34,19 +34,16 @@ class Cli
     puts `clear`
     self.ascii_welcome
     sleep(0.75)
-    puts
-    puts
-    puts 'Please enter a number to get started:'.colorize(:green)
+    puts "\n\nPlease enter a number to get started:".colorize(:green)
     self.login_or_create_account 
   end
 
   def self.login_or_create_account
-    puts
-    puts "1. Log in".colorize(:cyan)
-    puts "2. Create a new account".colorize(:cyan)
-    puts
+    puts "\n1. Log in".colorize(:cyan)
+    puts "2. Create a new account\n".colorize(:cyan)
     response = gets.chomp
     if response == "1"
+      puts `clear`
       self.login
     elsif response == "2"
       puts `clear`
@@ -54,66 +51,52 @@ class Cli
     elsif response == "all"
       self.all_users
     else
-      # puts
-      # system "say 'oops'"
-      # puts "Invalid response. Please enter either 1 or 2".colorize(:red)
       self.invalid_response_one_two
       self.login_or_create_account
     end
   end
 
   def self.login
-    puts `clear`
-    puts
-    puts "Please enter your username.".colorize(:green)
-    puts 
+    puts "\nPlease enter your username:\n".colorize(:green) 
     username = gets.chomp.downcase
     @@current_user = User.find_by(username: username)
     if current_user
       puts `clear`
-      puts "Hello, #{current_user.username}!".colorize(:cyan)
-      puts
+      puts "Hello, #{current_user.username}!\n".colorize(:cyan)
       sleep(1.15)
       self.menu
     elsif username == "evans"
       Ew.spicy
-      sleep(1)
+      sleep(0.25)
       self.exit
     else
-      puts `clear`
-      puts "This user does not exist.".colorize(:red)
-      puts
-      puts "Please enter the number to login again or to create a new account.".colorize(:green)
-      puts
+      puts "\nThis user does not exist.\n".colorize(:red)
+      puts "Please enter 1 or 2 to log in again or to create a new account.\n".colorize(:green)
       self.login_or_create_account
     end
   end
 
   def self.new_user
-    puts "Please enter a new username:".colorize(:green)
-    puts
-    n = gets.chomp.downcase
-    if User.find_by(username: n)
-      puts "Sorry, #{n} is already taken. Please enter a different username.".colorize(:red)
+    puts "Please enter a new username:\n".colorize(:green)
+
+    username = gets.chomp.downcase
+    if User.find_by(username: username)
+      puts "Sorry, #{username} is already taken. Please enter a different username.".colorize(:red)
       sleep(0.5)
       self.new_user
     else
-      User.create(
-        username: n
-      )
-      @@current_user = User.find_by(username: n)
+      User.create(username: username) 
+
+      @@current_user = User.find_by(username: username)
       if current_user
         puts `clear`
-        puts
-        puts "New user account has been created.".colorize(:magenta)
+        puts "\nNew user account has been created.".colorize(:magenta)
         sleep(1)
         puts `clear`
-        puts "Hello, #{current_user.username}!".colorize(:cyan)
-        puts 
+        puts "Hello, #{current_user.username}!\n".colorize(:cyan)
         self.menu 
       else
-        puts "Unable to create a new user account. Please start again.".colorize(:red)
-        puts
+        puts "Unable to create a new user account. Please start again.\n".colorize(:red)
         self.login_or_create_account
       end
     end
@@ -173,10 +156,8 @@ class Cli
       sleep(0.25)
       self.exit
     else 
-      puts
-      system "say 'oops'"
-      puts "Invalid response. Please enter a number 1-6.".colorize(:red)
-      puts
+      system "\nsay 'oops'"
+      puts "Invalid response. Please enter a number 1-6.\n".colorize(:red)
       sleep(1)
       self.menu
     end
@@ -228,39 +209,32 @@ class Cli
     when "4"
       dollars = "$$$$"
     else
-      puts
-      system "say 'oops'"
-      puts "Invalid response. Please enter a number 1-4.".colorize(:red)
-      puts
+      system "\nsay 'oops'"
+      puts "Invalid response. Please enter a number 1-4.\n".colorize(:red)
       sleep(0.5)
       self.choose_by_price
     end
-
+    system("clear")
     five_restaurants = Restaurant.all.select { |r| r.price == dollars}.uniq.shuffle.take(5)
     self.pick_from_five(five_restaurants)
+    
   end
 
   def self.pick_from_five(five_restaurants)
-    #puts `clear`
-    puts "Here are some restaurants that match that search:".colorize(:magenta)
-    puts
+    puts "Here are some restaurants that match that search:\n".colorize(:magenta)
     
     table = [["No.", "Name", "Price", "Rating"]]
-
     five_restaurants.each_with_index do |obj, idx|
       table << ["#{idx +1}", obj.name, obj.price, obj.rating]
     end
 
     puts table.to_table(:first_row_is_head => true)
 
-    puts
-    puts "Please enter the number of the restaurant you'd like to order from, or type 'menu' to return to the main menu:".colorize(:green)
-    puts
+    puts "\nPlease enter the number of the restaurant you'd like to order from, or type 'menu' to return to the main menu:\n".colorize(:green)
+
     response = gets.chomp 
     if response == 'menu'
-      puts
-      puts "Returning to main menu..."
-      puts
+      puts "\nReturning to main menu...\n"
       sleep(1.5)
       puts `clear`
       self.menu
@@ -272,8 +246,7 @@ class Cli
       restaurant = five_restaurants[response]
       self.place_order(restaurant)
     else
-      puts
-      system "say 'oops'"
+      system "\nsay 'oops'"
       puts "Invalid response. Please enter a number between 1 and #{five_restaurants.length} or type 'menu'".colorize(:red)
       sleep(1)
       self.pick_from_five(five_restaurants)
@@ -282,8 +255,7 @@ class Cli
 
 
   def self.choose_by_category
-    puts "What type of food are you hungry for? Type something like 'pizza'".colorize(:green)
-    puts
+    puts "What type of food are you hungry for? Type something like 'pizza'\n".colorize(:green)
     response = gets.chomp.downcase
     five_restaurants = Restaurant.all.select { |r| r.category.downcase.include?(response) }
     five_restaurants = five_restaurants.uniq.shuffle.take(5)
@@ -292,15 +264,13 @@ class Cli
       self.pick_from_five(five_restaurants)
     else
       puts
-      puts "Sorry, this category does not exist. Let's try again.".colorize(:red)
-      puts
+      puts "\nSorry, this category does not exist. Let's try again.\n".colorize(:red)
       puts "Here are some popular categories:".colorize(:red)
       puts "    American"
       puts "    Thai"
       puts "    Italian"
       puts "    Seafood"
-      puts "    Bakeries"
-      puts
+      puts "    Bakeries\n"
       self.choose_by_category
     end
   end
@@ -309,10 +279,8 @@ class Cli
   def self.roulette
     puts `clear`
     chosen = Restaurant.all.shuffle.first
-    puts
-    puts "How about this one?".colorize(:magenta)
+    puts "\nHow about this one?\n".colorize(:magenta)
     sleep(0.5)
-    puts
 
     table = Text::Table.new
     table.head = ["No.", "Name", "Price", "Rating"]
@@ -321,10 +289,8 @@ class Cli
     puts table.to_s
 
     sleep(0.25)
-    puts
-    puts
-    puts "If you like this choice type 'order' otherwise type 'try again'.".colorize(:green)
-    puts
+    puts "\n\nIf you like this choice type 'order' otherwise type 'try again'.\n".colorize(:green)
+
     response = gets.chomp.downcase
 
     case response
@@ -334,8 +300,7 @@ class Cli
     when 'try again'
       self.roulette
     else
-      puts
-      system "say 'oops'"
+      system "\nsay 'oops'"
       puts "Invalid response. Please only type 'order' or 'try again'.".colorize(:red)
       sleep(1)
       self.roulette
